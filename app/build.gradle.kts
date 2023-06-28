@@ -55,6 +55,15 @@ dependencies {
   implementation(libs.hilt.android)
   kapt(libs.hilt.android.compiler)
 
+  // Timber
+  implementation(libs.timber)
+
+  // Retrofit
+  implementation(libs.square.retrofit)
+  implementation(libs.square.retrofit.convertor.gson)
+  implementation(libs.square.okhttp3)
+  implementation(libs.square.okhttp3.logging.interceptor)
+
   testImplementation(libs.junit)
   androidTestImplementation(libs.androidx.test.ext.junit)
   androidTestImplementation(libs.espresso.core)
