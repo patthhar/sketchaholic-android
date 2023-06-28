@@ -4,6 +4,7 @@ plugins {
   alias(libs.plugins.kotlinAndroid)
   alias(libs.plugins.ksp)
   alias(libs.plugins.hilt)
+  kotlin("kapt")
 }
 
 android {
@@ -44,7 +45,7 @@ dependencies {
 
   // Dagger-Hilt
   implementation(libs.hilt.android)
-  ksp(libs.hilt.android.compiler)
+  kapt(libs.hilt.android.compiler)
 
   testImplementation(libs.junit)
   androidTestImplementation(libs.androidx.test.ext.junit)
