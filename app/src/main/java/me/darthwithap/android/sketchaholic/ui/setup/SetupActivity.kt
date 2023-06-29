@@ -1,7 +1,7 @@
 package me.darthwithap.android.sketchaholic.ui.setup
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import me.darthwithap.android.sketchaholic.R
 
 class SetupActivity : AppCompatActivity() {

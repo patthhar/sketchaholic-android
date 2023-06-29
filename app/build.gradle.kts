@@ -20,7 +20,9 @@ android {
 
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
   }
-
+  buildFeatures {
+    viewBinding = true
+  }
   buildTypes {
     release {
       isMinifyEnabled = false
@@ -63,6 +65,9 @@ dependencies {
   implementation(libs.square.retrofit.convertor.gson)
   implementation(libs.square.okhttp3)
   implementation(libs.square.okhttp3.logging.interceptor)
+
+  // Lottie
+  implementation(libs.lottie)
 
   testImplementation(libs.junit)
   androidTestImplementation(libs.androidx.test.ext.junit)
