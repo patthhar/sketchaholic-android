@@ -4,4 +4,11 @@
   <string name="choose_a_username">choose a username</string>
   <string name="username">username</string>
   <string name="next">next</string>
+  <string name="search_for_rooms">search for rooms</string>
+  <string name="no_rooms_found">no rooms found</string>
+  <string name="or">or</string>
+  <string name="create_room">create room</string>
+  <string name="create_a_new_room">create a new room</string>
+  <string name="room_name">room name</string>
+  <string name="room_size">room size</string>
 </resources>

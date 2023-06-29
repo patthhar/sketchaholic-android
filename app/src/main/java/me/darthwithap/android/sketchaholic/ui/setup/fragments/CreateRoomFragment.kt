@@ -3,16 +3,16 @@ package me.darthwithap.android.sketchaholic.ui.setup.fragments
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import me.darthwithap.android.sketchaholic.databinding.FragmentUsernameBinding
+import me.darthwithap.android.sketchaholic.databinding.FragmentCreateRoomBinding
 
-class UsernameFragment : Fragment() {
-  private var _binding: FragmentUsernameBinding? = null
-  private val binding: FragmentUsernameBinding
+class CreateRoomFragment : Fragment() {
+  private var _binding: FragmentCreateRoomBinding? = null
+  private val binding: FragmentCreateRoomBinding
     get() = _binding!!
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-    _binding = FragmentUsernameBinding.bind(view)
+    _binding = FragmentCreateRoomBinding.bind(view)
   }
 
   override fun onDestroy() {
