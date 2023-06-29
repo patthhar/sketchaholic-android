@@ -15,6 +15,7 @@ retrofit = "2.9.0"
 okhttp3 = "4.11.0"
 gson = "2.10.1"
 lottie = "6.0.0"
+navigation = "2.3.5"
 
 [libraries]
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
@@ -33,7 +34,8 @@ square-okhttp3 = { group = "com.squareup.okhttp3", name = "okhttp", version.ref 
 square-okhttp3-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp3" }
 gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 lottie = { group = "com.airbnb.android", name = "lottie", version.ref = "lottie" }
-
+navigation = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "navigation" }
+navigation-fragment = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "navigation" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
