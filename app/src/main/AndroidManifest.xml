@@ -14,7 +14,7 @@
     android:theme="@style/Theme.Sketchaholic"
     tools:targetApi="31">
     <activity
-      android:name=".DrawingActivity"
+      android:name=".ui.drawing.DrawingActivity"
       android:exported="false"
       android:windowSoftInputMode="adjustPan" />
     <activity

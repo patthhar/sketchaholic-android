@@ -1,7 +1,8 @@
-package me.darthwithap.android.sketchaholic
+package me.darthwithap.android.sketchaholic.ui.drawing
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import me.darthwithap.android.sketchaholic.R
 
 class DrawingActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {

@@ -1,3 +1,7 @@
 <resources>
   <string name="app_name">Sketchaholic</string>
+  <string name="sketchaholic">sketchaholic</string>
+  <string name="choose_a_username">choose a username</string>
+  <string name="username">username</string>
+  <string name="next">next</string>
 </resources>
