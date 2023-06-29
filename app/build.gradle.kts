@@ -69,6 +69,10 @@ dependencies {
   // Lottie
   implementation(libs.lottie)
 
+  // Navigation Fragment
+  implementation(libs.navigation)
+  implementation(libs.navigation.fragment)
+
   testImplementation(libs.junit)
   androidTestImplementation(libs.androidx.test.ext.junit)
   androidTestImplementation(libs.espresso.core)
