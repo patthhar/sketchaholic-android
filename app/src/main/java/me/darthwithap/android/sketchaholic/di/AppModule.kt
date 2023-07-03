@@ -7,9 +7,13 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import me.darthwithap.android.sketchaholic.data.remote.SetupApi
+import me.darthwithap.android.sketchaholic.util.Constants.HTTP_BASE_URL_LOCAL_HOST
 import me.darthwithap.android.sketchaholic.util.DispatcherProvider
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 @Module
@@ -23,6 +27,17 @@ object AppModule {
       .addInterceptor(HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BODY
       }).build()
+  }
+
+  @Singleton
+  @Provides
+  fun provideSetupApi(okHttpClient: OkHttpClient): SetupApi {
+    return Retrofit.Builder()
+      .baseUrl(HTTP_BASE_URL_LOCAL_HOST)
+      .addConverterFactory(GsonConverterFactory.create())
+      .client(okHttpClient)
+      .build()
+      .create(SetupApi::class.java)
   }
 
   @Singleton
