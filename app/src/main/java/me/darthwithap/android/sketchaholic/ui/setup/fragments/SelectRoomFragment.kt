@@ -3,9 +3,10 @@ package me.darthwithap.android.sketchaholic.ui.setup.fragments
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import me.darthwithap.android.sketchaholic.R
 import me.darthwithap.android.sketchaholic.databinding.FragmentSelectRoomBinding
 
-class SelectRoomFragment : Fragment() {
+class SelectRoomFragment : Fragment(R.layout.fragment_select_room) {
   private var _binding: FragmentSelectRoomBinding? = null
   private val binding: FragmentSelectRoomBinding
     get() = _binding!!
