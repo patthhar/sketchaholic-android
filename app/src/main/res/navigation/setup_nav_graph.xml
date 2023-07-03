@@ -8,7 +8,7 @@
   <fragment
     android:id="@+id/usernameFragment"
     android:name="me.darthwithap.android.sketchaholic.ui.setup.fragments.UsernameFragment"
-    android:label="UsernameFragment" >
+    android:label="UsernameFragment">
     <action
       android:id="@+id/action_usernameFragment_to_selectRoomFragment"
       app:destination="@id/selectRoomFragment" />
@@ -16,7 +16,7 @@
   <fragment
     android:id="@+id/selectRoomFragment"
     android:name="me.darthwithap.android.sketchaholic.ui.setup.fragments.SelectRoomFragment"
-    android:label="SelectRoomFragment" >
+    android:label="SelectRoomFragment">
     <action
       android:id="@+id/action_selectRoomFragment_to_createRoomFragment"
       app:destination="@id/createRoomFragment" />
@@ -30,7 +30,7 @@
   <fragment
     android:id="@+id/createRoomFragment"
     android:name="me.darthwithap.android.sketchaholic.ui.setup.fragments.CreateRoomFragment"
-    android:label="CreateRoomFragment" >
+    android:label="CreateRoomFragment">
     <action
       android:id="@+id/action_createRoomFragment_to_drawingActivity"
       app:destination="@id/drawingActivity" />
@@ -42,7 +42,7 @@
     android:id="@+id/drawingActivity"
     android:name="me.darthwithap.android.sketchaholic.ui.drawing.DrawingActivity"
     android:label="activity_drawing"
-    tools:layout="@layout/activity_drawing" >
+    tools:layout="@layout/activity_drawing">
     <argument
       android:name="username"
       app:argType="string" />
