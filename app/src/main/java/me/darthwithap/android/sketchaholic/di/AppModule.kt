@@ -54,7 +54,7 @@ object AppModule {
         get() = Dispatchers.Main
       override val io: CoroutineDispatcher
         get() = Dispatchers.IO
-      override val defualt: CoroutineDispatcher
+      override val default: CoroutineDispatcher
         get() = Dispatchers.Default
     }
   }
