@@ -1,5 +1,7 @@
 package me.darthwithap.android.sketchaholic.di
 
+import android.app.Application
+import android.content.Context
 import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
@@ -19,6 +21,12 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
+
+  @Singleton
+  @Provides
+  fun provideApplicationContext(app: Application): Context {
+    return app.applicationContext
+  }
 
   @Singleton
   @Provides
