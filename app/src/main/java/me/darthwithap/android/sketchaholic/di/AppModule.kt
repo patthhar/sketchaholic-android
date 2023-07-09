@@ -6,10 +6,13 @@ import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import me.darthwithap.android.sketchaholic.data.remote.SetupApi
+import me.darthwithap.android.sketchaholic.data.repository.SetupRepository
+import me.darthwithap.android.sketchaholic.data.repository.SetupRepositoryImpl
 import me.darthwithap.android.sketchaholic.util.Constants.HTTP_BASE_URL_LOCAL_HOST
 import me.darthwithap.android.sketchaholic.util.DispatcherProvider
 import okhttp3.OkHttpClient
@@ -65,5 +68,17 @@ object AppModule {
       override val default: CoroutineDispatcher
         get() = Dispatchers.Default
     }
+  }
+
+  @Provides
+  @Singleton
+  fun provideSetupRepository(
+    setupApi: SetupApi,
+    context: Context
+  ): SetupRepository {
+    return SetupRepositoryImpl(
+      setupApi,
+      context
+    )
   }
 }
