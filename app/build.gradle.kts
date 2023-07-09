@@ -4,6 +4,8 @@ plugins {
   alias(libs.plugins.kotlinAndroid)
   alias(libs.plugins.ksp)
   alias(libs.plugins.hilt)
+  alias(libs.plugins.safeArgs)
+
   kotlin("kapt")
 }
 
@@ -72,6 +74,9 @@ dependencies {
   // Navigation Fragment
   implementation(libs.navigation)
   implementation(libs.navigation.fragment)
+
+  // GSon
+  implementation(libs.gson)
 
   testImplementation(libs.junit)
   androidTestImplementation(libs.androidx.test.ext.junit)
