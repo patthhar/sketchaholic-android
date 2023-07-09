@@ -3,8 +3,10 @@ package me.darthwithap.android.sketchaholic.ui.setup
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import dagger.hilt.android.AndroidEntryPoint
 import me.darthwithap.android.sketchaholic.databinding.ActivitySetupBinding
 
+@AndroidEntryPoint
 class SetupActivity : AppCompatActivity() {
 
   private lateinit var binding: ActivitySetupBinding

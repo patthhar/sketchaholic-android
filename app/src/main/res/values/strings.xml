@@ -14,5 +14,8 @@
   <string name="error_internet_not_connected">Internet not connected</string>
   <string name="error_http_exception">Something went wrong!</string>
   <string name="error_network_error">Network error</string>
-  <string name="error_unknown">Unknown error occured</string>
+  <string name="error_unknown">Unknown error occurred</string>
+  <string name="error_username_empty">Username can\'t be empty</string>
+  <string name="error_username_too_short">Username too short, minimum length is %d</string>
+  <string name="error_username_too_long">Username too long, maximum length is %d</string>
 </resources>

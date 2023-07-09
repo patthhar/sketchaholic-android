@@ -12,6 +12,9 @@
     <action
       android:id="@+id/action_usernameFragment_to_selectRoomFragment"
       app:destination="@id/selectRoomFragment" />
+    <argument
+        android:name="username"
+        app:argType="string" />
   </fragment>
   <fragment
     android:id="@+id/selectRoomFragment"
@@ -20,12 +23,12 @@
     <action
       android:id="@+id/action_selectRoomFragment_to_createRoomFragment"
       app:destination="@id/createRoomFragment" />
+    <argument
+        android:name="username"
+        app:argType="string" />
     <action
       android:id="@+id/action_selectRoomFragment_to_drawingActivity"
       app:destination="@id/drawingActivity" />
-    <argument
-      android:name="username"
-      app:argType="string" />
   </fragment>
   <fragment
     android:id="@+id/createRoomFragment"
@@ -35,8 +38,8 @@
       android:id="@+id/action_createRoomFragment_to_drawingActivity"
       app:destination="@id/drawingActivity" />
     <argument
-      android:name="username"
-      app:argType="string" />
+        android:name="username"
+        app:argType="string" />
   </fragment>
   <activity
     android:id="@+id/drawingActivity"
@@ -44,10 +47,10 @@
     android:label="activity_drawing"
     tools:layout="@layout/activity_drawing">
     <argument
-      android:name="username"
-      app:argType="string" />
+        android:name="username"
+        app:argType="string" />
     <argument
-      android:name="roomName"
-      app:argType="string" />
+        android:name="roomName"
+        app:argType="string" />
   </activity>
 </navigation>

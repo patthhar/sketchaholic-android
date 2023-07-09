@@ -11,6 +11,7 @@ import kotlinx.coroutines.launch
 import me.darthwithap.android.sketchaholic.data.remote.websockets.Room
 import me.darthwithap.android.sketchaholic.data.repository.SetupRepository
 import me.darthwithap.android.sketchaholic.util.Constants.MAX_ROOM_NAME_LENGTH
+import me.darthwithap.android.sketchaholic.util.Constants.MAX_USERNAME_LENGTH
 import me.darthwithap.android.sketchaholic.util.Constants.MIN_ROOM_NAME_LENGTH
 import me.darthwithap.android.sketchaholic.util.Constants.MIN_USERNAME_LENGTH
 import me.darthwithap.android.sketchaholic.util.DispatcherProvider
@@ -35,7 +36,7 @@ class SetupViewModel @Inject constructor(
       when {
         trimmedUsername.isEmpty() -> _setupEvent.emit(SetupEvent.InputEmptyError)
         trimmedUsername.length < MIN_USERNAME_LENGTH -> _setupEvent.emit(SetupEvent.InputTooShortError)
-        trimmedUsername.length > MIN_USERNAME_LENGTH -> _setupEvent.emit(SetupEvent.InputTooLongError)
+        trimmedUsername.length > MAX_USERNAME_LENGTH -> _setupEvent.emit(SetupEvent.InputTooLongError)
         else -> _setupEvent.emit(SetupEvent.NavigateToSelectRoom(trimmedUsername))
       }
     }

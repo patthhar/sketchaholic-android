@@ -8,4 +8,6 @@ object Constants {
 
   const val MIN_ROOM_NAME_LENGTH = 4
   const val MAX_ROOM_NAME_LENGTH = 16
+
+  const val KEY_ARG_USERNAME = "username"
 }
