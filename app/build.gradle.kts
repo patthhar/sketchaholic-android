@@ -78,6 +78,9 @@ dependencies {
   // GSon
   implementation(libs.gson)
 
+  // Datastore
+  implementation(libs.datastore)
+
   testImplementation(libs.junit)
   androidTestImplementation(libs.androidx.test.ext.junit)
   androidTestImplementation(libs.espresso.core)

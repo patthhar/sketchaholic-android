@@ -11,6 +11,8 @@ object Constants {
 
   const val KEY_ARG_USERNAME = "username"
   const val KEY_ARG_ROOM_NAME = "roomName"
+  const val KEY_CLIENT_ID = "clientId"
+  const val KEY_CLIENT_ID_QUERY_PARAM = "client_id"
 
   const val ROOM_SEARCH_DELAY = 1000L
 }

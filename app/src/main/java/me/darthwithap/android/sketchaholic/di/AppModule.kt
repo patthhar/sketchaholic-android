@@ -10,11 +10,15 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
 import me.darthwithap.android.sketchaholic.data.remote.SetupApi
 import me.darthwithap.android.sketchaholic.data.repository.SetupRepository
 import me.darthwithap.android.sketchaholic.data.repository.SetupRepositoryImpl
 import me.darthwithap.android.sketchaholic.util.Constants.HTTP_BASE_URL_LOCAL_HOST
+import me.darthwithap.android.sketchaholic.util.Constants.KEY_CLIENT_ID_QUERY_PARAM
 import me.darthwithap.android.sketchaholic.util.DispatcherProvider
+import me.darthwithap.android.sketchaholic.util.clientId
+import me.darthwithap.android.sketchaholic.util.dataStore
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -33,11 +37,29 @@ object AppModule {
 
   @Singleton
   @Provides
-  fun provideOkHttpClient(): OkHttpClient {
+  fun provideOkHttpClient(clientId: String): OkHttpClient {
     return OkHttpClient.Builder()
+      .addInterceptor { chain ->
+        val request = chain.request().newBuilder()
+          .url(
+            chain.request().url.newBuilder()
+              .addQueryParameter(KEY_CLIENT_ID_QUERY_PARAM, clientId)
+              .build()
+          )
+          .build()
+        chain.proceed(request)
+      }
       .addInterceptor(HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BODY
       }).build()
+  }
+
+  @Provides
+  @Singleton
+  fun provideClientId(@ApplicationContext context: Context): String {
+    return runBlocking {
+      context.dataStore.clientId()
+    }
   }
 
   @Singleton
