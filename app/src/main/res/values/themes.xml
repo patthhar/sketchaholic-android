@@ -13,6 +13,7 @@
     <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
     <!-- Customize your theme here. -->
     <item name="textInputStyle">@style/TextInputStyle</item>
+    <item name="android:progressBarStyleHorizontal">@style/HorizontalProgressBarStyle</item>
   </style>
 
   <style name="TextInputLayoutStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
@@ -30,5 +31,9 @@
   <style name="DropDownStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
     <item name="boxStrokeColor">@drawable/text_input_box_selector</item>
     <item name="boxStrokeWidth">2dp</item>
+  </style>
+
+  <style name="HorizontalProgressBarStyle" parent="Widget.AppCompat.ProgressBar.Horizontal">
+    <item name="android:progressTint">@color/black</item>
   </style>
 </resources>

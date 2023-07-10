@@ -9,4 +9,10 @@
   <color name="white">#FFFFFFFF</color>
 
   <color name="lightgrey">#DDDDDD</color>
+  <color name="red">#EF5350</color>
+  <color name="green">#66BB6A</color>
+  <color name="orange">#FF7043</color>
+  <color name="yellow">#FFCA28</color>
+  <color name="darkGray">#464646</color>
+  <color name="overlay_color">#AFACAC</color>
 </resources>

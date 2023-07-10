@@ -22,4 +22,5 @@
   <string name="error_room_name_too_short">Room name too short, minimum length is %d</string>
   <string name="error_room_name_too_long">Room name too long, maximum length is %d</string>
   <string name="error_room_size_empty">Room size can\'t be empty</string>
+  <string name="choose_your_word">choose your word</string>
 </resources>
