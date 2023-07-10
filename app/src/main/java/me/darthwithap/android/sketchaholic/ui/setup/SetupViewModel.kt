@@ -61,13 +61,13 @@ class SetupViewModel @Inject constructor(
     }
   }
 
-  fun getRooms(searchQuery: String) {
+  fun getRooms(searchQuery: String = "") {
     _rooms.value = SetupEvent.GetRoomsLoading
     viewModelScope.launch(dispatchers.main) {
       val result = repository.getRooms(searchQuery)
       if (result is Result.Success) {
         if (result.data?.isEmpty() == false) {
-          _rooms.value = SetupEvent.GetRooms(result.data ?: return@launch)
+          _rooms.value = SetupEvent.GetRooms(result.data)
         } else {
           _rooms.value = SetupEvent.GetRoomsEmpty
         }

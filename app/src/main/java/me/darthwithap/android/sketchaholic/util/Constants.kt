@@ -10,4 +10,7 @@ object Constants {
   const val MAX_ROOM_NAME_LENGTH = 16
 
   const val KEY_ARG_USERNAME = "username"
+  const val KEY_ARG_ROOM_NAME = "roomName"
+
+  const val ROOM_SEARCH_DELAY = 500L
 }
