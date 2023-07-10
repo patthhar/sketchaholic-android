@@ -70,8 +70,7 @@
       android:fontFamily="@font/jungle_kid"
       android:inputType="none"
       android:labelFor="@id/tv_max_persons"
-      android:padding="4dp"
-      android:text="4" />
+      android:padding="4dp" />
 
   </com.google.android.material.textfield.TextInputLayout>
 
