@@ -3,4 +3,8 @@
   <declare-styleable name="ColorRadioButton">
     <attr name="buttonColor" format="color" />
   </declare-styleable>
+  <declare-styleable name="ImageRadioButton">
+    <attr name="uncheckedDrawable" format="reference" />
+    <attr name="checkedDrawable" format="reference" />
+  </declare-styleable>
 </resources>
