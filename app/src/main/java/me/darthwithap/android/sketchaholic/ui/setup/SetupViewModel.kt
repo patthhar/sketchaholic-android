@@ -27,7 +27,7 @@ class SetupViewModel @Inject constructor(
   private val _setupEvent = MutableSharedFlow<SetupEvent>()
   val setupEvent: SharedFlow<SetupEvent> = _setupEvent
 
-  private val _rooms = MutableStateFlow<SetupEvent>(SetupEvent.GetRoomsEmpty)
+  private val _rooms = MutableStateFlow<SetupEvent>(SetupEvent.GetRoomsLoading)
   val rooms: StateFlow<SetupEvent> = _rooms
 
   fun validateUsernameAndNavigateToSelectRoom(username: String) {

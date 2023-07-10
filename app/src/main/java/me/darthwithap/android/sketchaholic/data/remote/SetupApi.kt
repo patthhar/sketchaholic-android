@@ -14,9 +14,9 @@ interface SetupApi {
     @Body room: Room
   ): Response<BasicApiResponse>
 
-  @GET("/api/room")
+  @GET("/api/rooms")
   suspend fun getRooms(
-    @Query("search_query") searchQuery: String = ""
+    @Query("search_query") searchQuery: String
   ): Response<List<Room>>
 
   @GET("/api/room/join")
