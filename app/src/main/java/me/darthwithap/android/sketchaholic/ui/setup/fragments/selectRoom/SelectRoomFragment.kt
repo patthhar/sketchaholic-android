@@ -1,11 +1,11 @@
-package me.darthwithap.android.sketchaholic.ui.setup.fragments
+package me.darthwithap.android.sketchaholic.ui.setup.fragments.selectRoom
 
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -18,7 +18,6 @@ import kotlinx.coroutines.launch
 import me.darthwithap.android.sketchaholic.R
 import me.darthwithap.android.sketchaholic.data.remote.websockets.Room
 import me.darthwithap.android.sketchaholic.databinding.FragmentSelectRoomBinding
-import me.darthwithap.android.sketchaholic.ui.setup.SetupViewModel
 import me.darthwithap.android.sketchaholic.ui.setup.adapters.RoomAdapter
 import me.darthwithap.android.sketchaholic.util.Constants.KEY_ARG_ROOM_NAME
 import me.darthwithap.android.sketchaholic.util.Constants.KEY_ARG_USERNAME
@@ -38,7 +37,7 @@ class SelectRoomFragment : Fragment(R.layout.fragment_select_room) {
   @Inject
   lateinit var roomAdapter: RoomAdapter
 
-  private val viewModel: SetupViewModel by activityViewModels()
+  private val viewModel: SelectRoomViewModel by viewModels()
   private val args: SelectRoomFragmentArgs by navArgs()
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -77,15 +76,15 @@ class SelectRoomFragment : Fragment(R.layout.fragment_select_room) {
 
   private fun listenToEvents() {
     lifecycleScope.launchWhenCreated {
-      viewModel.setupEvent.collectLatest { event ->
+      viewModel.event.collectLatest { event ->
         when (event) {
-          is SetupViewModel.SetupEvent.GetRoomsError -> {
+          is SelectRoomViewModel.Event.GetRoomsError -> {
             binding.roomsProgressBar.notVisible()
             noRoomsFound(false)
             snackbar(event.errorMsg)
           }
 
-          is SetupViewModel.SetupEvent.JoinRoom -> {
+          is SelectRoomViewModel.Event.JoinRoom -> {
             binding.roomsProgressBar.notVisible()
             findNavController().navigateSafely(
               R.id.action_selectRoomFragment_to_drawingActivity,
@@ -96,7 +95,7 @@ class SelectRoomFragment : Fragment(R.layout.fragment_select_room) {
             )
           }
 
-          is SetupViewModel.SetupEvent.JoinRoomError -> {
+          is SelectRoomViewModel.Event.JoinRoomError -> {
             binding.roomsProgressBar.notVisible()
             noRoomsFound(true)
             snackbar(event.errorMsg)
@@ -112,16 +111,16 @@ class SelectRoomFragment : Fragment(R.layout.fragment_select_room) {
     lifecycleScope.launchWhenCreated {
       viewModel.rooms.collectLatest { event ->
         when (event) {
-          SetupViewModel.SetupEvent.GetRoomsLoading -> {
+          SelectRoomViewModel.Event.GetRoomsLoading -> {
             binding.roomsProgressBar.isVisible = true
           }
 
-          SetupViewModel.SetupEvent.GetRoomsEmpty -> {
+          SelectRoomViewModel.Event.GetRoomsEmpty -> {
             binding.roomsProgressBar.isVisible = false
             noRoomsFound(true)
           }
 
-          is SetupViewModel.SetupEvent.GetRooms -> {
+          is SelectRoomViewModel.Event.GetRooms -> {
             binding.roomsProgressBar.notVisible()
             lifecycleScope.launch {
               roomAdapter.updateData(event.rooms)
