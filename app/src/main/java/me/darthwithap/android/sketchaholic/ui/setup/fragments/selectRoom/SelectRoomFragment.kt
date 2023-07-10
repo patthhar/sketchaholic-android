@@ -40,6 +40,8 @@ class SelectRoomFragment : Fragment(R.layout.fragment_select_room) {
   private val viewModel: SelectRoomViewModel by viewModels()
   private val args: SelectRoomFragmentArgs by navArgs()
 
+  private var updateDataJob: Job? = null
+
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     _binding = FragmentSelectRoomBinding.bind(view)
@@ -122,7 +124,8 @@ class SelectRoomFragment : Fragment(R.layout.fragment_select_room) {
 
           is SelectRoomViewModel.Event.GetRooms -> {
             binding.roomsProgressBar.notVisible()
-            lifecycleScope.launch {
+            updateDataJob?.cancel()
+            updateDataJob = lifecycleScope.launch {
               roomAdapter.updateData(event.rooms)
             }
           }
