@@ -25,9 +25,11 @@ class CreateRoomViewModel @Inject constructor(
 
   fun createRoom(room: Room) {
     val roomName = room.name.trim()
+    val roomSize = room.maxPlayers
     viewModelScope.launch(dispatchers.main) {
       when {
         roomName.isEmpty() -> _event.emit(Event.InputEmptyError)
+        roomSize == -1 -> _event.emit(Event.RoomSizeEmpty)
         roomName.length < MIN_ROOM_NAME_LENGTH -> _event.emit(Event.InputTooShortError)
         roomName.length > MAX_ROOM_NAME_LENGTH -> _event.emit(Event.InputTooLongError)
         else -> {
@@ -59,6 +61,7 @@ class CreateRoomViewModel @Inject constructor(
     object InputEmptyError : Event()
     object InputTooShortError : Event()
     object InputTooLongError : Event()
+    object RoomSizeEmpty: Event()
     data class CreateRoom(val room: Room) : Event()
     data class CreateRoomError(val errorMsg: String) : Event()
     data class JoinRoom(val roomName: String) : Event()

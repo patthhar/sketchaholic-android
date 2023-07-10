@@ -5,7 +5,7 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -26,7 +26,7 @@ class CreateRoomFragment : Fragment(R.layout.fragment_create_room) {
   private val binding: FragmentCreateRoomBinding
     get() = _binding!!
 
-  private val viewModel: CreateRoomViewModel by viewModels()
+  private val viewModel: CreateRoomViewModel by activityViewModels()
   private val args: CreateRoomFragmentArgs by navArgs()
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -38,10 +38,13 @@ class CreateRoomFragment : Fragment(R.layout.fragment_create_room) {
 
     binding.btnCreateRoomCreateRoom.setOnClickListener {
       binding.createRoomProgressBar.visible()
+      val roomSize = binding.tvMaxPersons.text.toString().let {
+        if (it.isNotEmpty()) it.toInt() else -1
+      }
       viewModel.createRoom(
         Room(
           binding.etRoomNameCreateRoom.text.toString(),
-          binding.tvMaxPersons.text.toString().toInt()
+          roomSize
         )
       )
     }
@@ -52,6 +55,9 @@ class CreateRoomFragment : Fragment(R.layout.fragment_create_room) {
       viewModel.event.collectLatest { event ->
         binding.createRoomProgressBar.notVisible()
         when (event) {
+          CreateRoomViewModel.Event.RoomSizeEmpty -> {
+            snackbar(R.string.error_room_size_empty)
+          }
           CreateRoomViewModel.Event.InputEmptyError -> {
             snackbar(R.string.error_room_name_empty)
           }
