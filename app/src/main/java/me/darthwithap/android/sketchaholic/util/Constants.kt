@@ -10,6 +10,8 @@ object Constants {
   const val MIN_ROOM_NAME_LENGTH = 4
   const val MAX_ROOM_NAME_LENGTH = 16
 
+  const val ERASER_THICKNESS = 50f
+
   const val KEY_ARG_USERNAME = "username"
   const val KEY_ARG_ROOM_NAME = "roomName"
   const val KEY_CLIENT_ID = "clientId"

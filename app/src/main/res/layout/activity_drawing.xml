@@ -66,7 +66,7 @@
         android:checked="true"
         app:buttonColor="@color/black" />
 
-      <me.darthwithap.android.sketchaholic.ui.views.ColorRadioButton
+      <me.darthwithap.android.sketchaholic.ui.views.ImageRadioButton
         android:id="@+id/rb_eraser"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
@@ -141,16 +141,16 @@
 
       <ImageButton
         android:id="@+id/ib_players"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
         android:background="@android:color/transparent"
         android:importantForAccessibility="no"
         app:srcCompat="@drawable/ic_person" />
 
       <ImageButton
         android:id="@+id/ib_mic"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
         android:background="@android:color/transparent"
         android:importantForAccessibility="no"
         app:srcCompat="@drawable/ic_mic_off" />

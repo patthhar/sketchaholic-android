@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.collectLatest
 import me.darthwithap.android.sketchaholic.R
 import me.darthwithap.android.sketchaholic.databinding.ActivityDrawingBinding
 import me.darthwithap.android.sketchaholic.util.Constants
+import me.darthwithap.android.sketchaholic.util.Constants.ERASER_THICKNESS
 
 @AndroidEntryPoint
 class DrawingActivity : AppCompatActivity() {
@@ -43,7 +44,7 @@ class DrawingActivity : AppCompatActivity() {
           R.id.rb_red -> selectColor(getMyColor(R.color.red))
           R.id.rb_yellow -> selectColor(getMyColor(R.color.yellow))
           R.id.rb_orange -> selectColor(getMyColor(R.color.orange))
-          R.id.rb_eraser -> selectColor(getMyColor(R.color.white), 44f)
+          R.id.rb_eraser -> selectColor(getMyColor(R.color.white), ERASER_THICKNESS)
         }
       }
     }

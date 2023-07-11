@@ -30,12 +30,12 @@ class ColorRadioButton @JvmOverloads constructor(
       }
       buttonPaint.apply {
         color = buttonColor
-        style = Paint.Style.FILL_AND_STROKE
+        style = Paint.Style.FILL
       }
       selectionPaint.apply {
-        color = Color.BLACK
+        color = context.resources.getColor(R.color.selection_black)
         style = Paint.Style.STROKE
-        strokeWidth = 12f
+        strokeWidth = 10f
       }
     }
   }
@@ -51,7 +51,7 @@ class ColorRadioButton @JvmOverloads constructor(
     super.onDraw(canvas)
     canvas?.drawCircle(viewWidth / 2f, viewHeight / 2f, radius, buttonPaint)
     if (isChecked) {
-      canvas?.drawCircle(viewWidth / 2f, viewHeight / 3f, radius * 1.1f, selectionPaint)
+      canvas?.drawCircle(viewWidth / 2f, viewHeight / 2f, radius * 1.1f, selectionPaint)
     }
   }
 }
