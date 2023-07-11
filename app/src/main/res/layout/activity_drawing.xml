@@ -10,7 +10,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <View
+    <me.darthwithap.android.sketchaholic.ui.views.DrawingView
       android:id="@+id/drawing_view"
       android:layout_width="match_parent"
       android:layout_height="0dp"
@@ -45,7 +45,7 @@
         android:id="@+id/rb_blue"
         android:layout_width="36dp"
         android:layout_height="36dp"
-        app:buttonColor="@android:color/holo_blue_dark" />
+        app:buttonColor="@color/blue" />
 
       <me.darthwithap.android.sketchaholic.ui.views.ColorRadioButton
         android:id="@+id/rb_orange"

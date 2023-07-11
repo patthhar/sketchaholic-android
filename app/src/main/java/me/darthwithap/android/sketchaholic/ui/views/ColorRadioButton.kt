@@ -10,7 +10,7 @@ import me.darthwithap.android.sketchaholic.R
 import kotlin.math.min
 import kotlin.properties.Delegates
 
-class ColorRadioButton(
+class ColorRadioButton @JvmOverloads constructor(
   context: Context,
   attrs: AttributeSet? = null
 ) : AppCompatRadioButton(context, attrs) {

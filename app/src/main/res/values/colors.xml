@@ -15,4 +15,5 @@
   <color name="yellow">#FFCA28</color>
   <color name="darkGray">#464646</color>
   <color name="overlay_color">#AFACAC</color>
+  <color name="blue">@android:color/holo_blue_dark</color>
 </resources>

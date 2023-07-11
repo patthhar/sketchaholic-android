@@ -1,7 +1,8 @@
 package me.darthwithap.android.sketchaholic.util
 
 object Constants {
-  const val HTTP_BASE_URL_LOCAL_HOST = "http://192.168.1.5:8080"
+  const val DEFAULT_PAINT_THICKNESS = 12f
+  const val HTTP_BASE_URL_LOCAL_HOST = "http://192.168.1.4:8080"
 
   const val MIN_USERNAME_LENGTH = 2
   const val MAX_USERNAME_LENGTH = 16

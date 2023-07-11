@@ -8,7 +8,7 @@ import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import me.darthwithap.android.sketchaholic.R
 import kotlin.properties.Delegates
 
-class ImageRadioButton(
+class ImageRadioButton @JvmOverloads constructor(
   context: Context,
   attrs: AttributeSet? = null
 ) : AppCompatRadioButton(context, attrs) {
