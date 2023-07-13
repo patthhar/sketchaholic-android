@@ -81,6 +81,10 @@ dependencies {
   // Datastore
   implementation(libs.datastore)
 
+  // Tinder Scarlet
+  implementation(libs.scarlet)
+  implementation(libs.scarlet.websocket)
+
   testImplementation(libs.junit)
   androidTestImplementation(libs.androidx.test.ext.junit)
   androidTestImplementation(libs.espresso.core)
