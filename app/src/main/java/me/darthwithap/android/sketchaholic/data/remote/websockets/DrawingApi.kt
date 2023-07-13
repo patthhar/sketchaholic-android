@@ -9,7 +9,7 @@ import me.darthwithap.android.sketchaholic.data.remote.websockets.models.BaseMod
 
 interface DrawingApi {
   @Receive
-  fun observeWebSocketEvents(): Flow<WebSocket.Event>
+  fun observeConnectionEvents(): Flow<WebSocket.Event>
 
   @Send
   fun sendBaseModel(baseModel: BaseModel): Boolean

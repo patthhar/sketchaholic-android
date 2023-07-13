@@ -90,6 +90,12 @@ class DrawingActivity : AppCompatActivity() {
     } else resources.getColor(color)
   }
 
+  private fun listenToConnectionEvents() {
+    lifecycleScope.launchWhenStarted {
+      viewModel
+    }
+  }
+
   override fun onOptionsItemSelected(item: MenuItem): Boolean {
     if (toggle.onOptionsItemSelected(item)) {
       return true
