@@ -95,7 +95,8 @@ object AppModule {
   @Provides
   @Singleton
   fun provideDrawingApi(
-    app: Application, okHttpClient: OkHttpClient, gson: Gson
+    okHttpClient: OkHttpClient,
+    gson: Gson
   ): DrawingApi {
     return Scarlet.Builder().backoffStrategy(LinearBackoffStrategy(RECONNECT_INTERVAL))
       .webSocketFactory(okHttpClient.newWebSocketFactory(WEBSOCKET_BASE_URL))
