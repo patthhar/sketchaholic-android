@@ -37,14 +37,34 @@ class DrawingViewModel @Inject constructor(
   private val dispatchers: DispatcherProvider,
   private val gson: Gson
 ) : ViewModel() {
+
   private val _selectedColorButtonId = MutableStateFlow(R.id.rb_black)
   val selectedColorButtonId: StateFlow<Int> = _selectedColorButtonId
+
+  private val _connectionProgressBarVisible = MutableStateFlow(true)
+  val connectionProgressBarVisible: StateFlow<Boolean> = _connectionProgressBarVisible
+
+  private val _chosenWordOverlayVisible = MutableStateFlow(false)
+  val chosenWordOverlayVisible: StateFlow<Boolean> = _chosenWordOverlayVisible
 
   private val connectionEventChannel = Channel<WebSocket.Event>()
   val connectionEvent = connectionEventChannel.receiveAsFlow().flowOn(dispatchers.io)
 
   private val socketEventChannel = Channel<SocketEvent>()
   val socketEvent = socketEventChannel.receiveAsFlow().flowOn(dispatchers.io)
+
+  init {
+    observeConnectionEvents()
+    observeBaseModels()
+  }
+
+  fun setChooseWordOverlayVisibility(isVisible: Boolean) {
+    _chosenWordOverlayVisible.value = isVisible
+  }
+
+  fun setConnectionProgressBarVisible(isVisible: Boolean) {
+    _connectionProgressBarVisible.value = isVisible
+  }
 
   fun checkRadioButton(id: Int) {
     _selectedColorButtonId.value = id
@@ -72,6 +92,7 @@ class DrawingViewModel @Inject constructor(
             }
           }
 
+          is GameError -> socketEventChannel.send(SocketEvent.GameErrorEvent(it))
           is Ping -> {
             sendBaseModel(Pong())
           }
@@ -98,5 +119,4 @@ class DrawingViewModel @Inject constructor(
     data class GameRunningStateEvent(val data: GameRunningState) : SocketEvent()
     object Undo : SocketEvent()
   }
-
 }

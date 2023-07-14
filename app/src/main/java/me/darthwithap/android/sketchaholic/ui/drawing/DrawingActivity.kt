@@ -8,20 +8,32 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
+import androidx.core.view.isVisible
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.navArgs
 import androidx.recyclerview.widget.RecyclerView
+import com.tinder.scarlet.WebSocket
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import me.darthwithap.android.sketchaholic.R
+import me.darthwithap.android.sketchaholic.data.remote.websockets.models.GameError.Companion.ERROR_ROOM_NOT_FOUND
+import me.darthwithap.android.sketchaholic.data.remote.websockets.models.JoinRoomHandshake
 import me.darthwithap.android.sketchaholic.databinding.ActivityDrawingBinding
 import me.darthwithap.android.sketchaholic.util.Constants
 import me.darthwithap.android.sketchaholic.util.Constants.ERASER_THICKNESS
+import me.darthwithap.android.sketchaholic.util.snackbar
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class DrawingActivity : AppCompatActivity() {
   private lateinit var binding: ActivityDrawingBinding
   private val viewModel: DrawingViewModel by viewModels()
+
+  private val args: DrawingActivityArgs by navArgs()
+
+  @Inject
+  lateinit var clientId: String
 
   private lateinit var toggle: ActionBarDrawerToggle
   private lateinit var rvPlayers: RecyclerView
@@ -31,6 +43,8 @@ class DrawingActivity : AppCompatActivity() {
     binding = ActivityDrawingBinding.inflate(layoutInflater)
     setContentView(binding.root)
     listenToUiStateUpdates()
+    listenToConnectionEvents()
+    listenToSocketEvents()
 
     toggle = ActionBarDrawerToggle(this, binding.root, R.string.open, R.string.close)
     toggle.syncState()
@@ -82,6 +96,17 @@ class DrawingActivity : AppCompatActivity() {
         }
       }
     }
+
+    lifecycleScope.launchWhenStarted {
+      viewModel.connectionProgressBarVisible.collect {
+        binding.connectionProgressBar.isVisible = it
+      }
+    }
+    lifecycleScope.launchWhenStarted {
+      viewModel.chosenWordOverlayVisible.collect {
+        binding.chooseWordOverlay.isVisible = it
+      }
+    }
   }
 
   private fun getMyColor(color: Int): Int {
@@ -92,7 +117,47 @@ class DrawingActivity : AppCompatActivity() {
 
   private fun listenToConnectionEvents() {
     lifecycleScope.launchWhenStarted {
-      viewModel
+      viewModel.connectionEvent.collect { event ->
+        when (event) {
+          is WebSocket.Event.OnConnectionOpened<*> -> {
+            viewModel.sendBaseModel(
+              JoinRoomHandshake(args.username, args.roomName, clientId)
+            )
+            viewModel.setConnectionProgressBarVisible(false)
+          }
+
+          is WebSocket.Event.OnMessageReceived -> {}
+          is WebSocket.Event.OnConnectionClosing -> {}
+          is WebSocket.Event.OnConnectionClosed -> {
+            viewModel.setConnectionProgressBarVisible(false)
+          }
+
+          is WebSocket.Event.OnConnectionFailed -> {
+            viewModel.setConnectionProgressBarVisible(false)
+            event.throwable.printStackTrace()
+            snackbar(getString(R.string.error_connection_failed))
+          }
+        }
+      }
+    }
+  }
+
+  private fun listenToSocketEvents() {
+    lifecycleScope.launchWhenStarted {
+      viewModel.socketEvent.collectLatest { event ->
+        when (event) {
+          is DrawingViewModel.SocketEvent.GameErrorEvent -> {
+            when (event.data.errorType) {
+              ERROR_ROOM_NOT_FOUND -> {
+                snackbar(getString(R.string.error_room_not_found))
+                finish()
+              }
+            }
+          }
+
+          else -> {}
+        }
+      }
     }
   }
 
