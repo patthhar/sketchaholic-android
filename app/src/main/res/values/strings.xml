@@ -25,4 +25,6 @@
   <string name="choose_your_word">choose your word</string>
   <string name="open">Player list drawer opened</string>
   <string name="close">Player list drawer closed</string>
+  <string name="error_connection_failed">The connection failed</string>
+  <string name="error_room_not_found">Room not found</string>
 </resources>
