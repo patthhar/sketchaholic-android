@@ -119,6 +119,10 @@ class SelectRoomFragment : Fragment(R.layout.fragment_select_room) {
 
           SelectRoomViewModel.Event.GetRoomsEmpty -> {
             binding.roomsProgressBar.isVisible = false
+            updateDataJob?.cancel()
+            updateDataJob = lifecycleScope.launch {
+              roomAdapter.updateData(emptyList())
+            }
             noRoomsFound(true)
           }
 
@@ -128,6 +132,7 @@ class SelectRoomFragment : Fragment(R.layout.fragment_select_room) {
             updateDataJob = lifecycleScope.launch {
               roomAdapter.updateData(event.rooms)
             }
+            noRoomsFound(false)
           }
 
           else -> Unit

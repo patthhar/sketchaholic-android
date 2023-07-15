@@ -2,6 +2,7 @@ package me.darthwithap.android.sketchaholic.data.remote.websockets
 
 import com.tinder.scarlet.Stream
 import com.tinder.scarlet.StreamAdapter
+import com.tinder.scarlet.utils.getRawType
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -33,13 +34,12 @@ class FlowStreamAdapter<T> : StreamAdapter<T, Flow<T>> {
     }
   }
 
-  object Factory: StreamAdapter.Factory {
+  object Factory : StreamAdapter.Factory {
     override fun create(type: Type): StreamAdapter<Any, Any> {
-      return when(type) {
+      return when (type.getRawType()) {
         Flow::class.java -> FlowStreamAdapter()
         else -> throw IllegalStateException(STREAM_ADAPTER_ERROR)
       }
     }
-
   }
 }
