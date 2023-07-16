@@ -13,6 +13,7 @@ import androidx.core.view.isVisible
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tinder.scarlet.WebSocket
 import dagger.hilt.android.AndroidEntryPoint
@@ -22,8 +23,10 @@ import me.darthwithap.android.sketchaholic.data.remote.websockets.models.DrawAct
 import me.darthwithap.android.sketchaholic.data.remote.websockets.models.GameError.Companion.ERROR_ROOM_NOT_FOUND
 import me.darthwithap.android.sketchaholic.data.remote.websockets.models.JoinRoomHandshake
 import me.darthwithap.android.sketchaholic.databinding.ActivityDrawingBinding
+import me.darthwithap.android.sketchaholic.ui.setup.adapters.ChatMessageAdapter
 import me.darthwithap.android.sketchaholic.util.Constants
 import me.darthwithap.android.sketchaholic.util.Constants.ERASER_THICKNESS
+import me.darthwithap.android.sketchaholic.util.DispatcherProvider
 import me.darthwithap.android.sketchaholic.util.snackbar
 import javax.inject.Inject
 
@@ -37,8 +40,13 @@ class DrawingActivity : AppCompatActivity() {
   @Inject
   lateinit var clientId: String
 
+  @Inject
+  lateinit var dispatchers: DispatcherProvider
+
   private lateinit var toggle: ActionBarDrawerToggle
   private lateinit var rvPlayers: RecyclerView
+
+  private lateinit var chatMessageAdapter: ChatMessageAdapter
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -47,6 +55,7 @@ class DrawingActivity : AppCompatActivity() {
     listenToUiStateUpdates()
     listenToConnectionEvents()
     listenToSocketEvents()
+    setupChatRecyclerView()
 
     if (args.username == "test") {
       binding.drawingView.isUserDrawing = true
@@ -203,6 +212,14 @@ class DrawingActivity : AppCompatActivity() {
           else -> {}
         }
       }
+    }
+  }
+
+  private fun setupChatRecyclerView() {
+    binding.rvChat.apply {
+      chatMessageAdapter = ChatMessageAdapter(args.username, dispatchers)
+      adapter = chatMessageAdapter
+      layoutManager = LinearLayoutManager(this@DrawingActivity)
     }
   }
 
