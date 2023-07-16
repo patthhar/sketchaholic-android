@@ -14,6 +14,7 @@ import me.darthwithap.android.sketchaholic.R
 import me.darthwithap.android.sketchaholic.data.remote.websockets.Room
 import me.darthwithap.android.sketchaholic.databinding.FragmentCreateRoomBinding
 import me.darthwithap.android.sketchaholic.util.Constants.KEY_ARG_ROOM_NAME
+import me.darthwithap.android.sketchaholic.util.Constants.KEY_ARG_USERNAME
 import me.darthwithap.android.sketchaholic.util.Constants.MAX_ROOM_NAME_LENGTH
 import me.darthwithap.android.sketchaholic.util.Constants.MIN_ROOM_NAME_LENGTH
 import me.darthwithap.android.sketchaholic.util.navigateSafely
@@ -58,6 +59,7 @@ class CreateRoomFragment : Fragment(R.layout.fragment_create_room) {
           CreateRoomViewModel.Event.RoomSizeEmpty -> {
             snackbar(R.string.error_room_size_empty)
           }
+
           CreateRoomViewModel.Event.InputEmptyError -> {
             snackbar(R.string.error_room_name_empty)
           }
@@ -82,9 +84,8 @@ class CreateRoomFragment : Fragment(R.layout.fragment_create_room) {
             findNavController().navigateSafely(
               R.id.action_createRoomFragment_to_drawingActivity,
               Bundle().apply {
-                putString(
-                  KEY_ARG_ROOM_NAME, event.roomName
-                )
+                putString(KEY_ARG_USERNAME, args.username)
+                putString(KEY_ARG_ROOM_NAME, event.roomName)
               })
           }
 
