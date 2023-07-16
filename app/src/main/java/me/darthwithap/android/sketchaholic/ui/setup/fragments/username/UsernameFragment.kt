@@ -53,8 +53,8 @@ class UsernameFragment : Fragment(R.layout.fragment_username) {
 
           is UsernameViewModel.Event.NavigateToSelectRoom -> {
             findNavController().navigateSafely(
-              R.id.action_usernameFragment_to_selectRoomFragment,
-              Bundle().apply {
+              actionId = R.id.action_usernameFragment_to_selectRoomFragment,
+              navArgs = Bundle().apply {
                 putString(KEY_ARG_USERNAME, event.username)
               }
             )

@@ -46,13 +46,19 @@ class DrawingView @JvmOverloads constructor(
   private var pathDataChangedListener: ((Stack<PathData>) -> Unit)? = null
   private var onDrawListener: ((DrawData) -> Unit)? = null
 
-  var roomName: String? = null
+  private var roomName: String? = null
+
+  private var startedSimulationTouch: Boolean = false
 
   var isUserDrawing: Boolean = false
     set(value) {
       isEnabled = value
       field = value
     }
+
+  fun sendRoomName(name: String) {
+    roomName = name
+  }
 
   fun setOnDrawListener(listener: (DrawData) -> Unit) {
     onDrawListener = listener
@@ -86,6 +92,58 @@ class DrawingView @JvmOverloads constructor(
       strokeWidth = initialThickness
     }
     canvas?.drawPath(path, paint)
+  }
+
+  // Reset path when times runs out and player is still drawing
+  override fun setEnabled(enabled: Boolean) {
+    super.setEnabled(enabled)
+    path.reset()
+    invalidate()
+  }
+
+  fun undo() {
+    if (pathStack.isNotEmpty()) {
+      pathStack.pop()
+      pathDataChangedListener?.invoke(pathStack)
+    }
+  }
+
+  fun simulateStartTouch(drawData: DrawData) {
+    parseDrawData(drawData).apply {
+      paint.color = color
+      paint.strokeWidth = thickness
+      path.reset()
+      path.moveTo(fromX, fromY)
+      invalidate()
+      startedSimulationTouch = true
+    }
+  }
+
+  fun simulateMoveTouch(drawData: DrawData) {
+    parseDrawData(drawData).apply {
+      val dx = abs(toX - fromX)
+      val dy = abs(toY - fromY)
+      if (!startedSimulationTouch) {
+        simulateStartTouch(drawData)
+      }
+      if (dx >= smoothness || dy >= smoothness) {
+        isDrawing = false
+        path.quadTo(fromX, fromY, (fromX + toX) / 2f, (fromY + toY) / 2f)
+        invalidate()
+      }
+    }
+  }
+
+  fun simulateReleaseTouch(drawData: DrawData) {
+    parseDrawData(drawData).apply {
+      path.lineTo(fromX, fromY)
+      canvas?.drawPath(path, paint)
+      pathStack.push(PathData(path, color, thickness))
+      pathDataChangedListener?.invoke(pathStack)
+      path = Path()
+      invalidate()
+      startedSimulationTouch = false
+    }
   }
 
   private fun startedTouch(x: Float, y: Float) {
@@ -161,6 +219,15 @@ class DrawingView @JvmOverloads constructor(
       toX = toX / viewWidth!!,
       toY = toY / viewHeight!!,
       motionEvent = motionEvent
+    )
+  }
+
+  private fun parseDrawData(drawData: DrawData): DrawData {
+    return drawData.copy(
+      fromX = drawData.fromX * viewWidth!!,
+      fromY = drawData.fromY * viewHeight!!,
+      toX = drawData.toX * viewWidth!!,
+      toY = drawData.toY * viewHeight!!
     )
   }
 

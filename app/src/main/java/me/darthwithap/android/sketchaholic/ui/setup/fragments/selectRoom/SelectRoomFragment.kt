@@ -68,8 +68,8 @@ class SelectRoomFragment : Fragment(R.layout.fragment_select_room) {
 
     binding.btnCreateRoom.setOnClickListener {
       findNavController().navigateSafely(
-        R.id.action_selectRoomFragment_to_createRoomFragment,
-        Bundle().apply {
+        actionId = R.id.action_selectRoomFragment_to_createRoomFragment,
+        navArgs = Bundle().apply {
           putString(KEY_ARG_USERNAME, args.username)
         }
       )

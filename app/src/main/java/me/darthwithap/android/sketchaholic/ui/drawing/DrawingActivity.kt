@@ -3,6 +3,7 @@ package me.darthwithap.android.sketchaholic.ui.drawing
 import android.os.Build
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.MotionEvent
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -17,6 +18,7 @@ import com.tinder.scarlet.WebSocket
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import me.darthwithap.android.sketchaholic.R
+import me.darthwithap.android.sketchaholic.data.remote.websockets.models.DrawAction
 import me.darthwithap.android.sketchaholic.data.remote.websockets.models.GameError.Companion.ERROR_ROOM_NOT_FOUND
 import me.darthwithap.android.sketchaholic.data.remote.websockets.models.JoinRoomHandshake
 import me.darthwithap.android.sketchaholic.databinding.ActivityDrawingBinding
@@ -46,8 +48,14 @@ class DrawingActivity : AppCompatActivity() {
     listenToConnectionEvents()
     listenToSocketEvents()
 
+    if (args.username == "test") {
+      binding.drawingView.isUserDrawing = true
+    }
+
     toggle = ActionBarDrawerToggle(this, binding.root, R.string.open, R.string.close)
     toggle.syncState()
+
+    binding.drawingView.sendRoomName(args.roomName)
 
     val header = layoutInflater.inflate(R.layout.nav_drawer_header, binding.navView)
     rvPlayers = header.findViewById(R.id.rv_players)
@@ -70,6 +78,13 @@ class DrawingActivity : AppCompatActivity() {
       override fun onDrawerStateChanged(newState: Int) {}
 
     })
+
+    binding.ibUndo.setOnClickListener {
+      if (binding.drawingView.isUserDrawing) {
+        binding.drawingView.undo()
+        viewModel.sendBaseModel(DrawAction(DrawAction.ACTION_UNDO))
+      }
+    }
 
     binding.colorGroup.setOnCheckedChangeListener { _, id ->
       viewModel.checkRadioButton(id)
@@ -159,6 +174,30 @@ class DrawingActivity : AppCompatActivity() {
                 finish()
               }
             }
+          }
+
+          is DrawingViewModel.SocketEvent.DrawDataEvent -> {
+            val drawData = event.data
+            if (!binding.drawingView.isUserDrawing) {
+              when (drawData.motionEvent) {
+                MotionEvent.ACTION_DOWN -> {
+                  binding.drawingView.simulateStartTouch(drawData)
+                }
+
+                MotionEvent.ACTION_MOVE -> {
+                  binding.drawingView.simulateMoveTouch(drawData)
+                }
+
+                MotionEvent.ACTION_UP -> {
+                  binding.drawingView.simulateReleaseTouch(drawData)
+                }
+
+              }
+            }
+          }
+
+          is DrawingViewModel.SocketEvent.Undo -> {
+            binding.drawingView.undo()
           }
 
           else -> {}
