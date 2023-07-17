@@ -17,8 +17,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tinder.scarlet.WebSocket
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import me.darthwithap.android.sketchaholic.R
+import me.darthwithap.android.sketchaholic.data.remote.websockets.models.BaseModel
+import me.darthwithap.android.sketchaholic.data.remote.websockets.models.ChatMessage
 import me.darthwithap.android.sketchaholic.data.remote.websockets.models.DrawAction
 import me.darthwithap.android.sketchaholic.data.remote.websockets.models.GameError.Companion.ERROR_ROOM_NOT_FOUND
 import me.darthwithap.android.sketchaholic.data.remote.websockets.models.JoinRoomHandshake
@@ -27,6 +31,7 @@ import me.darthwithap.android.sketchaholic.ui.setup.adapters.ChatMessageAdapter
 import me.darthwithap.android.sketchaholic.util.Constants
 import me.darthwithap.android.sketchaholic.util.Constants.ERASER_THICKNESS
 import me.darthwithap.android.sketchaholic.util.DispatcherProvider
+import me.darthwithap.android.sketchaholic.util.hideKeyboard
 import me.darthwithap.android.sketchaholic.util.snackbar
 import javax.inject.Inject
 
@@ -48,6 +53,8 @@ class DrawingActivity : AppCompatActivity() {
 
   private lateinit var chatMessageAdapter: ChatMessageAdapter
 
+  private var chatUpdateJob: Job? = null
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     binding = ActivityDrawingBinding.inflate(layoutInflater)
@@ -65,6 +72,9 @@ class DrawingActivity : AppCompatActivity() {
     toggle.syncState()
 
     binding.drawingView.sendRoomName(args.roomName)
+
+    chatMessageAdapter.stateRestorationPolicy =
+      RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
 
     val header = layoutInflater.inflate(R.layout.nav_drawer_header, binding.navView)
     rvPlayers = header.findViewById(R.id.rv_players)
@@ -87,6 +97,23 @@ class DrawingActivity : AppCompatActivity() {
       override fun onDrawerStateChanged(newState: Int) {}
 
     })
+
+    binding.ibClearText.setOnClickListener {
+      binding.etMessage.text?.clear()
+    }
+
+    binding.ibSend.setOnClickListener {
+      viewModel.sendChatMessage(
+        ChatMessage(
+          args.username,
+          args.roomName,
+          binding.etMessage.text.toString(),
+          System.currentTimeMillis()
+        )
+      )
+      binding.etMessage.text?.clear()
+      hideKeyboard(binding.root)
+    }
 
     binding.ibUndo.setOnClickListener {
       if (binding.drawingView.isUserDrawing) {
@@ -112,6 +139,13 @@ class DrawingActivity : AppCompatActivity() {
   }
 
   private fun listenToUiStateUpdates() {
+    lifecycleScope.launchWhenStarted {
+      viewModel.chat.collect { chat ->
+        if (chatMessageAdapter.chats.isEmpty()) {
+          updateChats(chat)
+        }
+      }
+    }
     lifecycleScope.launchWhenCreated {
       viewModel.selectedColorButtonId.collectLatest { id ->
         binding.colorGroup.check(id)
@@ -136,6 +170,22 @@ class DrawingActivity : AppCompatActivity() {
       viewModel.chosenWordOverlayVisible.collect {
         binding.chooseWordOverlay.isVisible = it
       }
+    }
+  }
+
+  private fun updateChats(chats: List<BaseModel>) {
+    chatUpdateJob?.cancel()
+    chatUpdateJob = lifecycleScope.launch {
+      chatMessageAdapter.updateData(chats)
+    }
+  }
+
+  private suspend fun addChatToRv(chat: BaseModel) {
+    val canScrollDown = binding.rvChat.canScrollVertically(1)
+    updateChats(chatMessageAdapter.chats + chat)
+    chatUpdateJob?.join()
+    if (!canScrollDown) { // We are at the last position already
+      binding.rvChat.scrollToPosition(chatMessageAdapter.chats.size - 1)
     }
   }
 
@@ -205,6 +255,14 @@ class DrawingActivity : AppCompatActivity() {
             }
           }
 
+          is DrawingViewModel.SocketEvent.ChatMessageEvent -> {
+            addChatToRv(event.data)
+          }
+
+          is DrawingViewModel.SocketEvent.AnnouncementEvent -> {
+            addChatToRv(event.data)
+          }
+
           is DrawingViewModel.SocketEvent.Undo -> {
             binding.drawingView.undo()
           }
@@ -228,5 +286,10 @@ class DrawingActivity : AppCompatActivity() {
       return true
     }
     return super.onOptionsItemSelected(item)
+  }
+
+  override fun onPause() {
+    super.onPause()
+    binding.rvChat.layoutManager?.onSaveInstanceState()
   }
 }

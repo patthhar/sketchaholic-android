@@ -85,6 +85,9 @@ dependencies {
   implementation(libs.scarlet)
   implementation(libs.scarlet.websocket)
 
+  // Recycler View
+  implementation(libs.recyclerview)
+
   testImplementation(libs.junit)
   androidTestImplementation(libs.androidx.test.ext.junit)
   androidTestImplementation(libs.espresso.core)

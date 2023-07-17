@@ -18,6 +18,7 @@ lottie = "6.0.0"
 navigation = "2.5.0"
 datastore = "1.0.0"
 scarlet = "0.1.12"
+recyclerview = "1.2.0"
 
 [libraries]
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
@@ -41,6 +42,7 @@ navigation-fragment = { group = "androidx.navigation", name = "navigation-fragme
 datastore = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
 scarlet = { group = "com.tinder.scarlet", name = "scarlet", version.ref = "scarlet" }
 scarlet-websocket = { group = "com.tinder.scarlet", name = "websocket-okhttp", version.ref = "scarlet" }
+recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerview" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
