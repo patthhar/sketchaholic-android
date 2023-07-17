@@ -41,6 +41,9 @@ class DrawingViewModel @Inject constructor(
   private val _chat = MutableStateFlow<List<BaseModel>>(listOf())
   val chat: StateFlow<List<BaseModel>> = _chat
 
+  private val _newWords = MutableStateFlow(NewWords(listOf()))
+  val newWords: StateFlow<NewWords> get() = _newWords
+
   private val _selectedColorButtonId = MutableStateFlow(R.id.rb_black)
   val selectedColorButtonId: StateFlow<Int> = _selectedColorButtonId
 
@@ -81,7 +84,7 @@ class DrawingViewModel @Inject constructor(
     }
   }
 
-  fun observeBaseModels() {
+  private fun observeBaseModels() {
     viewModelScope.launch {
       drawingApi.observeBaseModels().collectLatest {
         when (it) {
@@ -101,6 +104,15 @@ class DrawingViewModel @Inject constructor(
 
           is Announcement -> {
             socketEventChannel.send(SocketEvent.AnnouncementEvent(it))
+          }
+
+          is NewWords -> {
+            _newWords.value = it
+            socketEventChannel.send(SocketEvent.NewWordsEvent(it))
+          }
+
+          is ChosenWord -> {
+            socketEventChannel.send(SocketEvent.ChosenWordEvent(it))
           }
 
           is GameError -> socketEventChannel.send(SocketEvent.GameErrorEvent(it))
@@ -123,6 +135,11 @@ class DrawingViewModel @Inject constructor(
     viewModelScope.launch(dispatchers.io) {
       drawingApi.sendBaseModel(message)
     }
+  }
+
+  fun chooseWord(word: String, roomName: String) {
+    val chosenWord = ChosenWord(word, roomName)
+    sendBaseModel(chosenWord)
   }
 
   sealed class SocketEvent {

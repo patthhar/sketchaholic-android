@@ -171,6 +171,30 @@ class DrawingActivity : AppCompatActivity() {
         binding.chooseWordOverlay.isVisible = it
       }
     }
+
+    lifecycleScope.launchWhenStarted {
+      viewModel.newWords.collect {
+        val newWords = it.newWords
+        if (newWords.isEmpty()) return@collect
+        binding.apply {
+          btnFirstWord.text = newWords[0]
+          btnSecondWord.text = newWords[1]
+          btnThirdWord.text = newWords[2]
+          btnFirstWord.setOnClickListener {
+            viewModel.chooseWord(newWords[0], args.roomName)
+            viewModel.setChooseWordOverlayVisibility(false)
+          }
+          btnSecondWord.setOnClickListener {
+            viewModel.chooseWord(newWords[1], args.roomName)
+            viewModel.setChooseWordOverlayVisibility(false)
+          }
+          btnThirdWord.setOnClickListener {
+            viewModel.chooseWord(newWords[3], args.roomName)
+            viewModel.setChooseWordOverlayVisibility(false)
+          }
+        }
+      }
+    }
   }
 
   private fun updateChats(chats: List<BaseModel>) {
@@ -253,6 +277,11 @@ class DrawingActivity : AppCompatActivity() {
 
               }
             }
+          }
+
+          is DrawingViewModel.SocketEvent.ChosenWordEvent -> {
+            binding.tvCurrWord.text = event.data.chosenWord
+            binding.ibUndo.isEnabled = false
           }
 
           is DrawingViewModel.SocketEvent.ChatMessageEvent -> {
