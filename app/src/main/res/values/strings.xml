@@ -27,4 +27,7 @@
   <string name="close">Player list drawer closed</string>
   <string name="error_connection_failed">The connection failed</string>
   <string name="error_room_not_found">Room not found</string>
+  <string name="waiting_for_players">Waiting for players to join</string>
+  <string name="waiting_for_start">Waiting for game to start</string>
+  <string name="player_chosing_word">%s is chosing a word</string>
 </resources>

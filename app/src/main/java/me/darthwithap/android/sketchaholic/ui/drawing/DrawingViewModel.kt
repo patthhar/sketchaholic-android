@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.tinder.scarlet.WebSocket
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,6 +16,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import me.darthwithap.android.sketchaholic.R
 import me.darthwithap.android.sketchaholic.data.remote.websockets.DrawingApi
+import me.darthwithap.android.sketchaholic.data.remote.websockets.Room
 import me.darthwithap.android.sketchaholic.data.remote.websockets.models.Announcement
 import me.darthwithap.android.sketchaholic.data.remote.websockets.models.BaseModel
 import me.darthwithap.android.sketchaholic.data.remote.websockets.models.ChatMessage
@@ -25,9 +27,11 @@ import me.darthwithap.android.sketchaholic.data.remote.websockets.models.DrawDat
 import me.darthwithap.android.sketchaholic.data.remote.websockets.models.GameError
 import me.darthwithap.android.sketchaholic.data.remote.websockets.models.GameRunningState
 import me.darthwithap.android.sketchaholic.data.remote.websockets.models.NewWords
+import me.darthwithap.android.sketchaholic.data.remote.websockets.models.PhaseChange
 import me.darthwithap.android.sketchaholic.data.remote.websockets.models.Ping
 import me.darthwithap.android.sketchaholic.data.remote.websockets.models.Pong
 import me.darthwithap.android.sketchaholic.data.remote.websockets.models.RoundDrawInfo
+import me.darthwithap.android.sketchaholic.util.CoroutineTimer
 import me.darthwithap.android.sketchaholic.util.DispatcherProvider
 import javax.inject.Inject
 
@@ -44,6 +48,12 @@ class DrawingViewModel @Inject constructor(
   private val _newWords = MutableStateFlow(NewWords(listOf()))
   val newWords: StateFlow<NewWords> get() = _newWords
 
+  private val _phase = MutableStateFlow(PhaseChange(time = 0L))
+  val phase: StateFlow<PhaseChange> get() = _phase
+
+  private val _phaseTime = MutableStateFlow(0L)
+  val phaseTime: StateFlow<Long> get() = _phaseTime
+
   private val _selectedColorButtonId = MutableStateFlow(R.id.rb_black)
   val selectedColorButtonId: StateFlow<Int> = _selectedColorButtonId
 
@@ -59,9 +69,23 @@ class DrawingViewModel @Inject constructor(
   private val socketEventChannel = Channel<SocketEvent>()
   val socketEvent = socketEventChannel.receiveAsFlow().flowOn(dispatchers.io)
 
+  private val timer = CoroutineTimer()
+  private var timerJob: Job? = null
+
   init {
     observeConnectionEvents()
     observeBaseModels()
+  }
+
+  fun cancelTimer() {
+    timerJob?.cancel()
+  }
+
+  private fun setTimer(duration: Long) {
+    timerJob?.cancel()
+    timerJob = timer.timeAndEmit(duration, viewModelScope) {
+      _phaseTime.value = it
+    }
   }
 
   fun setChooseWordOverlayVisibility(isVisible: Boolean) {
@@ -118,6 +142,16 @@ class DrawingViewModel @Inject constructor(
           is GameError -> socketEventChannel.send(SocketEvent.GameErrorEvent(it))
           is Ping -> {
             sendBaseModel(Pong())
+          }
+
+          is PhaseChange -> {
+            it.phase.let { _ ->
+              _phase.value = it
+            }
+            _phaseTime.value = it.time
+            if (it.phase != Room.Phase.WAITING_FOR_PLAYERS) {
+              setTimer(it.time)
+            }
           }
         }
       }

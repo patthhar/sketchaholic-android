@@ -222,6 +222,16 @@ class DrawingView @JvmOverloads constructor(
     )
   }
 
+  fun finishOffDrawing() {
+    isDrawing = false
+    path.lineTo(currX ?: return, currY ?: return)
+    canvas?.drawPath(path, paint)
+    pathStack.push(PathData(path, paint.color, paint.strokeWidth))
+    pathDataChangedListener?.invoke(pathStack)
+    path = Path()
+    invalidate()
+  }
+
   private fun parseDrawData(drawData: DrawData): DrawData {
     return drawData.copy(
       fromX = drawData.fromX * viewWidth!!,

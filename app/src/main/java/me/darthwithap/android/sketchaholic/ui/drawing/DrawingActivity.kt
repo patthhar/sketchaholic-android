@@ -1,5 +1,6 @@
 package me.darthwithap.android.sketchaholic.ui.drawing
 
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.view.MenuItem
@@ -21,6 +22,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import me.darthwithap.android.sketchaholic.R
+import me.darthwithap.android.sketchaholic.data.remote.websockets.Room
 import me.darthwithap.android.sketchaholic.data.remote.websockets.models.BaseModel
 import me.darthwithap.android.sketchaholic.data.remote.websockets.models.ChatMessage
 import me.darthwithap.android.sketchaholic.data.remote.websockets.models.DrawAction
@@ -192,6 +194,63 @@ class DrawingActivity : AppCompatActivity() {
             viewModel.chooseWord(newWords[3], args.roomName)
             viewModel.setChooseWordOverlayVisibility(false)
           }
+        }
+      }
+    }
+
+    lifecycleScope.launchWhenStarted {
+      viewModel.phaseTime.collect { time ->
+        binding.roundTimerProgressBar.progress = time.toInt()
+        binding.tvRemainingTimeChooseWord.text = (time / 1000L).toString()
+      }
+    }
+    lifecycleScope.launchWhenStarted {
+      viewModel.phase.collect { phase ->
+        when (phase.phase) {
+          Room.Phase.WAITING_FOR_PLAYERS -> {
+            binding.tvCurrWord.text = getString(R.string.waiting_for_players)
+            viewModel.cancelTimer()
+            viewModel.setConnectionProgressBarVisible(false)
+            binding.roundTimerProgressBar.progress = binding.roundTimerProgressBar.max
+          }
+
+          Room.Phase.WAITING_FOR_START -> {
+            binding.roundTimerProgressBar.max = phase.time.toInt()
+            binding.tvCurrWord.text = getString(R.string.waiting_for_start)
+          }
+
+          Room.Phase.NEW_ROUND -> {
+            phase.drawingPlayer?.let {
+              binding.tvCurrWord.text = getString(R.string.player_chosing_word, it)
+            }
+            binding.apply {
+              drawingView.isEnabled = false
+              drawingView.setColor(Color.BLACK)
+              drawingView.setThickness(Constants.DEFAULT_PAINT_THICKNESS)
+              roundTimerProgressBar.max = phase.time.toInt()
+              val isUserDrawingPlayer = phase.drawingPlayer == args.username
+              chooseWordOverlay.isVisible = isUserDrawingPlayer
+            }
+          }
+
+          Room.Phase.GAME_RUNNING -> {
+            binding.chooseWordOverlay.isVisible = false
+            binding.roundTimerProgressBar.max = phase.time.toInt()
+          }
+
+          Room.Phase.SHOW_WORD -> {
+            binding.apply {
+              if (drawingView.isDrawing) {
+                drawingView.finishOffDrawing()
+              }
+              drawingView.isEnabled = false
+              drawingView.setThickness(Constants.DEFAULT_PAINT_THICKNESS)
+              drawingView.setColor(Color.BLACK)
+              roundTimerProgressBar.max = phase.time.toInt()
+            }
+          }
+
+          else -> {}
         }
       }
     }
