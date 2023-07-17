@@ -13,6 +13,7 @@ import me.darthwithap.android.sketchaholic.databinding.FragmentUsernameBinding
 import me.darthwithap.android.sketchaholic.util.Constants.KEY_ARG_USERNAME
 import me.darthwithap.android.sketchaholic.util.Constants.MAX_USERNAME_LENGTH
 import me.darthwithap.android.sketchaholic.util.Constants.MIN_USERNAME_LENGTH
+import me.darthwithap.android.sketchaholic.util.hideKeyboard
 import me.darthwithap.android.sketchaholic.util.navigateSafely
 import me.darthwithap.android.sketchaholic.util.snackbar
 
@@ -32,6 +33,7 @@ class UsernameFragment : Fragment(R.layout.fragment_username) {
 
     binding.btnNext.setOnClickListener {
       viewModel.validateUsernameAndNavigateToSelectRoom(binding.etUsername.text.toString())
+      requireActivity().hideKeyboard(binding.root)
     }
   }
 

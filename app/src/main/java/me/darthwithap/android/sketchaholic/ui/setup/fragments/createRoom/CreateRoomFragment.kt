@@ -17,6 +17,7 @@ import me.darthwithap.android.sketchaholic.util.Constants.KEY_ARG_ROOM_NAME
 import me.darthwithap.android.sketchaholic.util.Constants.KEY_ARG_USERNAME
 import me.darthwithap.android.sketchaholic.util.Constants.MAX_ROOM_NAME_LENGTH
 import me.darthwithap.android.sketchaholic.util.Constants.MIN_ROOM_NAME_LENGTH
+import me.darthwithap.android.sketchaholic.util.hideKeyboard
 import me.darthwithap.android.sketchaholic.util.navigateSafely
 import me.darthwithap.android.sketchaholic.util.notVisible
 import me.darthwithap.android.sketchaholic.util.snackbar
@@ -48,6 +49,7 @@ class CreateRoomFragment : Fragment(R.layout.fragment_create_room) {
           roomSize
         )
       )
+      requireActivity().hideKeyboard(binding.root)
     }
   }
 
